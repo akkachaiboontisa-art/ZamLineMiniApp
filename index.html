@@ -5,6 +5,26 @@
 <h1>My First Heading</h1>
 
 <p>My first paragraph.</p>
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby-VudmAFruCkR802F12nXw-aF67V7InbIHvRFKI8V10PrdZ3k-NYuzFi9STa3BpaYgwQ/exec';
+    const data = { name: "John Doe", email: "john@example.com" };
+
+    fetch(scriptURL, {
+      method: 'POST', // Use POST method
+      mode: 'no-cors', // Important for avoiding CORS errors with GAS redirecting
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data), // Convert data to JSON string
+    }).then(response => {
+      console.log('Success:', response);
+      alert("Message ok")
+    }).catch((error) => {
+      console.error('Error:', error);
+      alert("Message no")
+    });
+  </script>
 
 </body>
 </html>
