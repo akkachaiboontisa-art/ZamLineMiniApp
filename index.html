@@ -227,11 +227,11 @@ async function sendMsg() {
 
     //nnnnn2
       const coords = await getLocation();
-    //alert(coords[0]+","+coords[1]);
+    alert(coords[0]+","+coords[1]);
 
     
     //nnnn
-    let idTk = await liff.getIDToken();
+    /*let idTk = await liff.getIDToken();
     const scriptURL = 'https://script.google.com/macros/s/AKfycby-VudmAFruCkR802F12nXw-aF67V7InbIHvRFKI8V10PrdZ3k-NYuzFi9STa3BpaYgwQ/exec';
     const data = { name: "John Doe", email: "john@example.com", idToken: idTk, geolocate: coords[0]+","+coords[1] };
 
@@ -249,7 +249,7 @@ async function sendMsg() {
     }).catch((error) => {
       console.error('Error:', error);
       alert("Message no")
-    });
+    });/**/
 
     //-------n
   }
