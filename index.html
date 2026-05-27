@@ -1,54 +1,55 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
-<title>Zam MINI App</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+  <title>Zam MINI App</title>
   <style>
     body {
-  padding: 16px;
-}
+      padding: 16px;
+    }
 
-button {
-  display: none;
-  width: 100%;
-  padding: 8px 0;
-  margin: 8px auto;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-}
+    button {
+      display: none;
+      width: 100%;
+      padding: 8px 0;
+      margin: 8px auto;
+      -moz-border-radius: 8px;
+      -webkit-border-radius: 8px;
+      border-radius: 8px;
+    }
 
-p {
-  border-bottom: 1px dashed #ddd;
-}
+    p {
+      border-bottom: 1px dashed #ddd;
+    }
 
-#pictureUrl {
-  margin: 0 auto;
-  width: 32%;
-  display: -moz-box;
-  display: -webkit-box;
-  display: box;
-  -moz-box-pack: center;
-  -moz-box-align: center;
-  -webkit-box-pack: center;
-  -webkit-box-align: center;
-  box-pack: center;
-  box-align: center;
-  -moz-border-radius: 256px;
-  -webkit-border-radius: 256px;
-  border-radius: 256px;
-}
+    #pictureUrl {
+      margin: 0 auto;
+      width: 32%;
+      display: -moz-box;
+      display: -webkit-box;
+      display: box;
+      -moz-box-pack: center;
+      -moz-box-align: center;
+      -webkit-box-pack: center;
+      -webkit-box-align: center;
+      box-pack: center;
+      box-align: center;
+      -moz-border-radius: 256px;
+      -webkit-border-radius: 256px;
+      border-radius: 256px;
+    }
 
-#accessToken,
-#utouId {
-  display: block;
-  overflow: auto;
-}
-
+    #accessToken,
+    #utouId {
+      display: block;
+      overflow: auto;
+    }
   </style>
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
+
 <body id="body">
   <section id="profile">
     <img id="pictureUrl" src="https://vos.line-scdn.net/imgs/apis/ic_mini.png">
@@ -64,34 +65,25 @@ p {
   </section>
 
   <section id="button">
-    <button id="btnShortcut">Add Shortcut</button>
-    <button id="btnOpenWindow">Open Window</button>
     <button id="btnSend">Send Message</button>
-    <button id="btnShare">Share Target Picker</button>
     <button id="btnScanCode">Scan Code</button>
 
     <button id="btnLogIn">Log In</button>
     <button id="btnLogOut">Log Out</button>
   </section>
-    <script>
+  <script>
 
-      //https://developers.line.biz/en/docs/liff/using-user-profile/#use-user-info-in-liff-app
-      //https://developers.line.biz/en/docs/liff/developing-liff-apps/
-        // Import stylesheets
-//import './style.css';
+//https://developers.line.biz/en/docs/liff/using-user-profile/#use-user-info-in-liff-app
+//https://developers.line.biz/en/docs/liff/developing-liff-apps/
 
 // Body element
 const body = document.querySelector('#body');
 
 // Button elements
-const btnSend = document.querySelector('#btnSend');
-const btnShare = document.querySelector('#btnShare');
 const btnLogIn = document.querySelector('#btnLogIn');
 const btnLogOut = document.querySelector('#btnLogOut');
+const btnSend = document.querySelector('#btnSend');
 const btnScanCode = document.querySelector('#btnScanCode');
-
-const btnOpenWindow = document.querySelector('#btnOpenWindow');
-const btnShortcut = document.querySelector('#btnShortcut');
 
 // Profile elements
 const email = document.querySelector('#email');
@@ -128,16 +120,12 @@ async function main() {
     getUserProfile();
     getFriendship();
     btnSend.style.display = 'block';
-    btnShare.style.display = 'block';
     btnScanCode.style.display = 'block';
-    btnShortcut.style.display = 'block';
   } else {
     if (liff.isLoggedIn()) {
       btnLogIn.style.display = 'none';
       btnLogOut.style.display = 'block';
-      btnShare.style.display = 'block';
       btnScanCode.style.display = 'block';
-      btnShortcut.style.display = 'block';
       getUserProfile();
       getFriendship();
     } else {
@@ -145,8 +133,6 @@ async function main() {
       btnLogOut.style.display = 'none';
     }
   }
-
-  btnOpenWindow.style.display = 'block';
 }
 
 main();
@@ -175,41 +161,9 @@ btnSend.onclick = () => {
   sendMsg();
 };
 
-btnShare.onclick = () => {
-  shareMsg();
-};
-
 btnScanCode.onclick = () => {
   scanCode();
 };
-
-btnOpenWindow.onclick = () => {
-  liff.openWindow({
-    url: window.location.href,
-    external: true,
-  });
-};
-
-btnShortcut.onclick = async () => {
-  await liff.createShortcutOnHomeScreen({
-    url: 'https://miniapp.line.me/2010108184-EahiB3i0',
-  });
-};
-
-      async function getLocation() {
-  if (!navigator.geolocation) {
-    return [,];
-  }
-  try {
-    const position = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 });
-    });
-
-    return [position.coords.latitude, position.coords.longitude];
-  } catch (error) {
-    return [,]; 
-  }
-}
 
 async function sendMsg() {
   if (
@@ -226,7 +180,7 @@ async function sendMsg() {
     //alert("Message sent")
 
     //nnnnn2
-      const coords = await getLocation();
+    const coords = await getLocation();
     alert(coords[0]+","+coords[1]);
 
     
@@ -255,16 +209,6 @@ async function sendMsg() {
   }
 }
 
-async function shareMsg() {
-  await liff.shareTargetPicker([
-    {
-      type: 'image',
-      originalContentUrl: 'https://vos.line-scdn.net/imgs/apis/ic_mini.png',
-      previewImageUrl: 'https://vos.line-scdn.net/imgs/apis/ic_mini.png',
-    },
-  ]);
-}
-
 async function scanCode() {
   const result = await liff.scanCodeV2();
   code.innerHTML = '<b>Code: </b>' + result.value;
@@ -280,7 +224,23 @@ async function getFriendship() {
   friendShip.innerHTML = msg;
 }
 
+// +++++++++++++++++++ other aux fn ++++++++++++++++++++
+async function getLocation() {
+  if (!navigator.geolocation) {
+    return [,];
+  }
+  try {
+    const position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 });
+    });
 
-    </script>
+    return [position.coords.latitude, position.coords.longitude];
+  } catch (error) {
+    return [,]; 
+  }
+}
+
+  </script>
 </body>
+
 </html>
