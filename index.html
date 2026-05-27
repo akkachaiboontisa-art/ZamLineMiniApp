@@ -181,7 +181,44 @@ async function sendMsg() {
 
     //nnnnn2
     const coords = await getLocation();
-    alert(coords[0]+","+coords[1]);
+    if(!coords[0] || !coords[1] || !coords[2]){
+      alert("No Location!!!");
+      return;
+    }
+      //alert(coords[0]+","+coords[1]);
+    let idTk = await liff.getIDToken();
+
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzupOxiP7VZy9dy5EzUOQ4dRwqbK1WfffqKdGOyJFSF63TUSjaVhbnV77Cr6X1X8_gJVA/exec"
+
+    // e.g., ?myData=John%20Doe&action=greeting
+    const urlWithParams = new URL(GAS_WEB_APP_URL);
+      urlWithParams.searchParams.append("idToken", idTk);
+      urlWithParams.searchParams.append("coordsX", coords[0]);
+      urlWithParams.searchParams.append("coordsY", coords[1]);
+      urlWithParams.searchParams.append("coordsAcc", coords[2]);
+
+    try {    
+      const response = await fetch(urlWithParams, {
+        method: "GET", 
+        redirect: "follow", 
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+    
+      console.log("Response from server:", responseData);
+      alert(JSON.stringify(responseData));
+
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      alert(error);
+    }
 
     
     //nnnn
