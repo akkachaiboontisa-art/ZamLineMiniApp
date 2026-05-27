@@ -227,16 +227,21 @@ async function getFriendship() {
 // +++++++++++++++++++ other aux fn ++++++++++++++++++++
 async function getLocation() {
   if (!navigator.geolocation) {
-    return [,];
+    return [,,];
   }
   try {
+    const options = {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 10000
+    };
     const position = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 });
+      navigator.geolocation.getCurrentPosition(resolve, reject, options);
     });
 
-    return [position.coords.latitude, position.coords.longitude];
+    return [position.coords.latitude, position.coords.longitude, position.coords.accuracy];
   } catch (error) {
-    return [,]; 
+    return [,,]; 
   }
 }
 
