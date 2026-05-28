@@ -38,7 +38,7 @@
 
     <div id="resultContainer" class="card d-none border-primary text-start mb-4 shadow-sm">
       <div class="card-header bg-primary text-white py-2">
-        <h5 class="mb-0 text-center" id="resultTitle">Check Attendance Result</h5>
+        <h5 class="mb-0 text-center" id="resultTitle">Attendance Result</h5>
       </div>
       <div class="card-body py-3">
         <div class="row mb-2 border-bottom pb-1">
@@ -50,12 +50,16 @@
           <div class="col-6 text-end fw-semibold" id="resStudentNo">-</div>
         </div>
         <div class="row mb-2 border-bottom pb-1">
-          <div class="col-6 fw-bold text-muted">Distance:</div>
+          <div class="col-6 fw-bold text-muted">Distance (M.):</div>
           <div class="col-6 text-end fw-semibold" id="resDistance">-</div>
         </div>
         <div class="row">
           <div class="col-6 fw-bold text-muted">Result:</div>
           <div class="col-6 text-end fw-bold text-success" id="resResult">-</div>
+        </div>
+        <div class="row">
+          <div class="col-6 fw-bold text-muted">Time:</div>
+          <div class="col-6 text-end fw-bold text-success" id="resTimestamp">-</div>
         </div>
       </div>
     </div>
@@ -91,6 +95,7 @@
     const resStudentNo = document.querySelector('#resStudentNo');
     const resDistance = document.querySelector('#resDistance');
     const resResult = document.querySelector('#resResult');
+    const resTimestamp = document.querySelector('#resTimestamp');
 
     const code = document.querySelector('#code');
     const friendShip = document.querySelector('#friendShip');
@@ -196,15 +201,18 @@
         const responseData = await response.json();
         console.log("Response from server:", responseData);
 
-        const mappedName = responseData.name || (userProfileCached ? userProfileCached.displayName : "myname");
-        const mappedStudentNo = responseData.studentNo || "12345";
-        const mappedDistance = responseData.distance || "500 m.";
-        const mappedResult = responseData.result || "ok";
+        const mappedName = responseData.name || "-";
+        const mappedStudentNo = responseData.studentNo || "-";
+        const mappedDistance = Math.round(responseData.distance) || "-";
+        const mappedResult = responseData.result || "-";
+        const mappedTimestamp = responseData.timestamp || "-";
 
         resName.textContent = mappedName;
         resStudentNo.textContent = mappedStudentNo;
         resDistance.textContent = mappedDistance;
         resResult.textContent = mappedResult;
+        resTimestamp.textContent = mappedTimestamp;
+        
 
         // Dismiss the popup modal before displaying results
         hideLoading();
@@ -223,7 +231,7 @@
                   contents: [
                     {
                       type: "text",
-                      text: "Check Attendance Result",
+                      text: "Attendance Result",
                       weight: "bold",
                       size: "md",
                       color: "#195AEA"
@@ -233,8 +241,8 @@
                       layout: "horizontal",
                       margin: "lg",
                       contents: [
-                        { type: "text", text: "Name", color: "#888888", size: "sm" },
-                        { type: "text", text: mappedName, align: "end", size: "sm", weight: "bold", color: "#333333" }
+                        { type: "text", text: mappedName, color: "#888888", size: "sm" },
+                        { type: "text", text: mappedResult, align: "end", size: "sm", weight: "bold", color: "#333333" }
                       ]
                     }
                   ]
