@@ -11,6 +11,16 @@
 
 <body id="body" class="p-3">
 
+  <div id="loadingPopup" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-none flex-column justify-content-center align-items-center text-white" style="z-index: 9999;">
+    <div class="card p-4 bg-dark border-secondary text-center shadow-lg" style="max-width: 300px; width: 85%;">
+      <div class="spinner-border text-primary mx-auto mb-3" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h5 class="mb-1">Sending Data</h5>
+      <p class="text-muted small mb-0">Please wait a moment...</p>
+    </div>
+  </div>
+
   <div class="container text-center max-width-sm" style="max-width: 500px; margin: 0 auto;">
     
     <section id="profile" class="mb-4">
@@ -25,13 +35,6 @@
       <p id="code" class="border-bottom border-dashed pb-2"></p>
       <p id="friendShip" class="border-bottom border-dashed pb-2"></p>
     </section>
-
-    <div id="loadingSpinner" class="d-none my-4">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-      <p class="text-muted mt-2">Sending data to server, please wait...</p>
-    </div>
 
     <div id="resultContainer" class="card d-none border-primary text-start mb-4 shadow-sm">
       <div class="card-header bg-primary text-white py-2">
@@ -67,44 +70,36 @@
   </div>
 
   <script>
-    // Body element
     const body = document.querySelector('#body');
 
-    // Button elements
+    // UI elements
     const btnLogIn = document.querySelector('#btnLogIn');
     const btnLogOut = document.querySelector('#btnLogOut');
     const btnSend = document.querySelector('#btnSend');
     const btnScanCode = document.querySelector('#btnScanCode');
 
-    // Profile elements
     const email = document.querySelector('#email');
     const userId = document.querySelector('#userId');
     const pictureUrl = document.querySelector('#pictureUrl');
     const displayName = document.querySelector('#displayName');
     const statusMessage = document.querySelector('#statusMessage');
 
-    // Result & Loading UI elements
-    const loadingSpinner = document.querySelector('#loadingSpinner');
+    // Popup & Result elements
+    const loadingPopup = document.querySelector('#loadingPopup');
     const resultContainer = document.querySelector('#resultContainer');
     const resName = document.querySelector('#resName');
     const resStudentNo = document.querySelector('#resStudentNo');
     const resDistance = document.querySelector('#resDistance');
     const resResult = document.querySelector('#resResult');
 
-    // QR element
     const code = document.querySelector('#code');
-
-    // Friendship element
     const friendShip = document.querySelector('#friendShip');
 
-    // Global variable to cache user profile details
     let userProfileCached = null;
 
     async function main() {
-      // Initialize LIFF SDK
       await liff.init({ liffId: '2010108184-EahiB3i0' });
 
-      // Change colors cleanly using classes or strict hex
       switch (liff.getOS()) {
         case 'android':
           body.style.backgroundColor = '#d1f5d3';
@@ -114,7 +109,7 @@
           break;
         case 'web':
           body.style.backgroundColor = '#195AEA';
-          body.classList.add('text-white'); // readable on dark blue background
+          body.classList.add('text-white');
           break;
       }
 
@@ -128,7 +123,7 @@
           btnLogIn.style.display = 'none';
           btnLogOut.style.display = 'block';
           btnScanCode.style.display = 'block';
-          btnSend.style.display = 'block'; // showing send button in browser context for validation
+          btnSend.style.display = 'block';
           getUserProfile();
           getFriendship();
         } else {
@@ -142,7 +137,7 @@
 
     async function getUserProfile() {
       const profile = await liff.getProfile();
-      userProfileCached = profile; // cache profile details for fallback use
+      userProfileCached = profile;
       pictureUrl.src = profile.pictureUrl ? profile.pictureUrl : 'https://vos.line-scdn.net/imgs/apis/ic_mini.png';
       userId.innerHTML = '<b>userId:</b> ' + profile.userId;
       statusMessage.innerHTML = '<b>statusMessage:</b> ' + profile.statusMessage;
@@ -155,20 +150,31 @@
     btnSend.onclick = () => { sendMsg(); };
     btnScanCode.onclick = () => { scanCode(); };
 
+    // Helper functions to cleanly control popup visibility
+    function showLoading() {
+      loadingPopup.classList.remove('d-none');
+      loadingPopup.classList.add('d-flex');
+    }
+
+    function hideLoading() {
+      loadingPopup.classList.add('d-none');
+      loadingPopup.classList.remove('d-flex');
+    }
+
     async function sendMsg() {
-      // Reset visibility and display the Loading Spinner
-      loadingSpinner.classList.remove('d-none');
+      // Trigger the popup animation overlay
+      showLoading();
       resultContainer.classList.add('d-none');
 
       const coords = await getLocation();
       if (!coords[0] || !coords[1] || !coords[2]) {
-        loadingSpinner.classList.add('d-none');
+        hideLoading();
         alert("No Location!!!");
         return;
       }
 
       let idTk = await liff.getIDToken();
-      const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzupOxiP7VZy9dy5EzUOQ4dRwqbK1WfffqKdGOyJFSF63TUSjaVhbnV77Cr6X1X8_gJVA/exec"
+      const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzupOxiP7VZy9dy5EzUOQ4dRwqbK1WfffqKdGOyJFSF63TUSjaVhbnV77Cr6X1X8_gJVA/exec";
 
       const urlWithParams = new URL(GAS_WEB_APP_URL);
       urlWithParams.searchParams.append("idToken", idTk);
@@ -190,23 +196,20 @@
         const responseData = await response.json();
         console.log("Response from server:", responseData);
 
-        // Map server properties dynamically or default to placeholders
         const mappedName = responseData.name || (userProfileCached ? userProfileCached.displayName : "myname");
         const mappedStudentNo = responseData.studentNo || "12345";
         const mappedDistance = responseData.distance || "500 m.";
         const mappedResult = responseData.result || "ok";
 
-        // Inject response data into the 2-column container
         resName.textContent = mappedName;
         resStudentNo.textContent = mappedStudentNo;
         resDistance.textContent = mappedDistance;
         resResult.textContent = mappedResult;
 
-        // Toggle visibility: Hide Spinner, Show Results
-        loadingSpinner.classList.add('d-none');
+        // Dismiss the popup modal before displaying results
+        hideLoading();
         resultContainer.classList.remove('d-none');
 
-        // Send out Flex Message if app is inside the LINE client environment
         if (liff.isInClient() || liff.isLoggedIn()) {
           await liff.sendMessages([
             {
@@ -243,7 +246,7 @@
         }
 
       } catch (error) {
-        loadingSpinner.classList.add('d-none');
+        hideLoading();
         console.error("Fetch Error:", error);
         alert("Error occurred: " + error.message);
       }
