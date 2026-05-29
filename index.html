@@ -229,20 +229,20 @@
                   type: "box",
                   layout: "vertical",
                   contents: [
-                    {
+                    /*{
                       type: "text",
                       text: "Attendance Result",
                       weight: "bold",
                       size: "md",
                       color: "#195AEA"
-                    },
+                    },*/
                     {
                       type: "box",
                       layout: "horizontal",
                       margin: "lg",
                       contents: [
-                        { type: "text", text: mappedName, color: "#888888", size: "sm" },
-                        { type: "text", text: mappedResult, align: "end", size: "sm", weight: "bold", color: "#333333" }
+                        { type: "text", text: (mappedName+" "+mappedStudentNo.split("-")[1]), color: "#0c06c7", size: "sm" },
+                        { type: "text", text: (mappedResult=="in"?"มา":"ขาด"), align: "end", size: "sm", weight: "bold", color: (mappedResult=="in"?"#056517":"#bf1029") }
                       ]
                     }
                   ]
