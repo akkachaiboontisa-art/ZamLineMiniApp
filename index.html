@@ -199,6 +199,14 @@
         }
 
         const responseData = await response.json();
+
+        if(responseData.status == "error"){
+          hideLoading();
+          console.error("Get Error from Fetch:", responseData.message);
+          alert("Get Error from Fetch: " + responseData.message);
+          return;
+        }
+        
         console.log("Response from server:", responseData);
 
         const mappedName = responseData.name || "-";
