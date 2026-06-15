@@ -65,7 +65,7 @@
     </div>
 
     <section id="button" class="d-grid gap-2">
-      <button id="btnSend" class="btn btn-primary lg" style="display: none;">Send Message</button>
+      <button id="btnSend" class="btn btn-primary lg" style="display: none;">เช็คชื่อนักเรียน</button>
       <button id="btnScanCode" class="btn btn-info text-white" style="display: none;">Scan Code</button>
       <button id="btnLogIn" class="btn btn-success" style="display: none;">Log In</button>
       <button id="btnLogOut" class="btn btn-danger" style="display: none;">Log Out</button>
@@ -247,10 +247,10 @@
                     {
                       type: "box",
                       layout: "horizontal",
-                      margin: "lg",
+                      margin: "xs",
                       contents: [
-                        { type: "text", text: (mappedName+" "+mappedStudentNo.split("-")[1]), color: "#0c06c7", size: "sm" },
-                        { type: "text", text: (mappedResult=="in"?"มา":"ขาด"), align: "end", size: "sm", weight: "bold", color: (mappedResult=="in"?"#056517":"#bf1029") }
+                        { type: "text", text: (mappedStudentNo.split("-")[1]+" "+mappedName), color: "#0c06c7", size: "sm" },
+                        { type: "text", text: (mappedResult), align: "end", size: "sm", weight: "bold", color: (mappedResult=="in"?"#056517":"#bf1029") }
                       ]
                     }
                   ]
